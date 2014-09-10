@@ -18,4 +18,29 @@ cslep@ara.com
 
 * Motivation
 
-In 2007...
+On September 21, 2007 Go was first discussed by Robert Griesemer, Rob Pike, and Ken Thompson.
+- _"[...] development at Google is big, can be slow, and is often clumsy."_ -Rob Pike
+
+Frustration with using C++, Java, Python, and other languages:
+- Issues of scaling across developers, codebases, and hardware.
+- Language design was in totally unrelated environment to today's programming environment.
+- Build times on order of minutes to hours, consistently.
+- Uncontrolled or runaway dependencies.
+- Programmers using different subsets and dialects of the same programming language.
+- Programs difficult to read.
+- Duplication of effort.
+- Cost of updates too high.
+- Lack of tools, or too difficult/expensive to build tools.
+.image https://golang.org/doc/gopher/ref.png
+.caption _Gopher_ by [[http://www.reneefrench.com][Renée French]]
+
+* Language Design As An Issue
+
+- C++ designed in 1979, first standardized 1998
+- Java design started in 1991, first released in 1995
+- Python designed in 1989, first released in 1991
+
+First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip in 2001. By 2006,
+Intel (_Core Duo_) and AMD (_Opteron_) joined with multicore CPUs.
+
+* Motivation
