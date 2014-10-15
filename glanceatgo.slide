@@ -28,13 +28,12 @@ _"[...]_development_at_Google_is_big,_can_be_slow,_and_is_often_clumsy."_ -Rob P
 
 * Issues In The Software Engineering Big Picture
 
-- Language design was in unrelated environment to today's programming environment.
-- Programmers using different subsets and dialects of the same programming language.
+- Languages were designed in unrelated environments.
+- Programmers using different subsets and dialects.
 - Issues of scaling across developers, codebases, and hardware.
 - Build times on order of minutes to hours, consistently.
 - Uncontrolled or runaway dependencies.
 - Programs difficult to read.
-- Duplication of effort.
 - Cost of updates too high.
 - Lack of tools, or too difficult/expensive to build tools.
 .caption from [[https://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering]]
@@ -60,8 +59,11 @@ But, avoid the previous list of issues.
 - Light on the page
 - Fast to work in / Fast builds
 - Doesn't require tools, but supports them well
+
+* The Target (cont.)
+
 - Good at networking and multiprocessing*
-- `error` is builtin
+- `error` is built in
 - Package Dependency Management
 - Simple Package Export Rules
 - Third Party Code Discovery
@@ -71,17 +73,23 @@ But, avoid the previous list of issues.
 
 C++, Java, and Python rely on libraries to do concurrent programming. 
 
-- C++ designed in 1979, first standardized 1998
-- Java design started in 1991, first released in 1995
 - Python designed in 1989, first released in 1991
+- Java design started in 1991, first released in 1995
+- C++ designed in 1979, first standardized 1998
 
 First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip in 2001. By 2006, Intel (_Core_Duo_) and AMD (_Opteron_) joined with multicore CPUs.
 
 * Were They Successful?
 
-Let's skim the surface of the language at a high level.
+High level skim:
 
-What will not be shown (because they do not exist in Go version 1):
+- Mark and sweep garbage collected
+- Composition (no inheritance)
+- Interface implementation via duck-typing
+- Deployment is a single binary
+- Concurrency using built in language features
+
+Not in Go version 1:
 
 - Generic programming (templates)
 - Dynamic libraries
@@ -100,7 +108,58 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 .image playHome.png _ 900
 
-* 
+* Hello World
+
+.play helloWorld.go
+
+* Hello World
+
+.code helloWorld.go
+
+- `package`main` is a special package name for packages containing a main function.
+- `import`"fmt"` is similar to the `#include` C++ preprocessor macro.
+- The keyword `func` is used to declare a function.
+- _"Semicolons,_however,_are_for_parsers,_not_for_people,_and_we_wanted_to_eliminate_them_as_much_as_possible."_ Golang FAQ
+
+* An Expanded Example
+
+.play naiveFact.go /START/,/END/
+
+- A few semicolons, but BCPL-based _(not_javascript)_ semicolon injection forces brace style
+- Less parentheses.
+
+.play naiveFactBadBrace.go /START/,/END/
+
+* An Expanded Example (w/ Closure)
+
+.play closureFact.go /START/,/END/
+
+* C/C++ vs Go: Functional Programming
+
+Function:
+
+- C/C++: `int`(*)()`
+- Go: `func()`int`
+
+Function using a function:
+
+- C/C++: `int`(*)(int`(*)(int,`int),`int)`
+- Go: `func(func(int,`int)`int,`int)`int`
+
+Function using and returning a function:
+
+- C/C++: `int`(*(*)(int`(*)(int,`int),`int))(int,`int)`
+- Go: `func(func(int,`int)`int,`int)`func(int,`int)`int`
+
+* Error Handling
+
+.play closureFactErr.go
+
+* Error Handling
+
+
+
+- `error` is a built in interface type.
 
 * References:
 
@@ -109,6 +168,7 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 - [[http://web.stanford.edu/class/ee380/Abstracts/100428.html][Another Go at Language Design]] by Rob Pike, on April 28, 2010.
 - [[https://code.google.com/p/go/source/browse/][Golang Source Code]].
 - [[http://norvig.com/design-patterns/][Design Patterns in Dynamic Languages]] by Peter Norvig, on May 5, 1996.
+- [[https://golang.org/doc/faq][Golang FAQ]].
 - [[http://www.reneefrench.com][_Gopher_ Images]] by Renée French.
 - [[http://research.swtch.com/generic][The Generic Dilemma]] by Russ Cox, December 3, 2009.
 - [[https://groups.google.com/d/topic/golang-nuts/o0VTTqC8hOU/discussion][External Linking CLs]] discussion in golang-nuts.
