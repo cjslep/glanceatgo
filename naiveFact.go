@@ -4,7 +4,7 @@ import "fmt"
 
 //START OMIT
 func fact(n int) int {
-	val := 1
+	var val int = 1
 	for i := n; i > 0; i-- {
 		val *= i
 	}

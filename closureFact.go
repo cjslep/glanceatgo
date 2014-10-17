@@ -3,7 +3,7 @@ package main
 import "fmt"
 //START OMIT
 func fact(n int) func(int) int { // HL000
-	val := 1
+	var val int = 1
 	for i := n; i > 0; i-- {
 		val *= i
 	}

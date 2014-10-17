@@ -125,17 +125,21 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 * C/C++ vs Go: Functional Programming
 
-Function:
+Function type declaration:
 
 - `typedef`int`(*fn)(int,`int)`
 - `type`fn`func(int,`int)`int`
 
-Function using a function:
+* C/C++ vs Go: Functional Programming (cont.)
+
+Function using a function type declaration:
 
 - `typedef`int`(*fn)(int`(*)(int,`int),`int)`
 - `type`fn`func(func(int,`int)`int,`int)`int`
 
-Function using and returning a function:
+* C/C++ vs Go: Functional Programming (cont.)
+
+Function using and returning a function type declaration:
 
 - `typedef`int`(*(*fn)(int`(*)(int,`int),`int))(int,`int)`
 - `type`fn`func(func(int,`int)`int,`int)`func(int,`int)`int`
@@ -160,11 +164,13 @@ Any type satisfying all of the function definitions satisfies the interface.
 
 .play metadataError.go /START/,/END/
 
-* Error handling example:
+* Handling the Exceptional without Exceptions
+
+From the `io` package, some lines omitted:
 
 .code ioCopySample.go /STARTIO/,/ENDIO/
 
-* Handling the Exceptional without Exceptions
+* Handling the Exceptional without Exceptions (cont.)
 
 Returning an error as soon as it happens is idiomatic.
 

@@ -1,17 +1,14 @@
 //STARTIO OMIT
 func Copy(dst Writer, src Reader) (written int64, err error) {
-	// ...
 	buf := make([]byte, 32*1024)
 	for {
 		nr, er := src.Read(buf)
 		if nr > 0 {
 			nw, ew := dst.Write(buf[0:nr])
-			// ...
 			if ew != nil {
 				err = ew
 				break
 			}
-			// ...
 		}
 		if er == EOF {
 			break
