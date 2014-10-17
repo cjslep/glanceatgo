@@ -33,41 +33,29 @@ _"[...]_development_at_Google_is_big,_can_be_slow,_and_is_often_clumsy."_ -Rob P
 - Issues of scaling across developers, codebases, and hardware.
 - Build times on order of minutes to hours, consistently.
 - Uncontrolled or runaway dependencies.
-- Programs difficult to read.
 - Cost of updates too high.
 - Lack of tools, or too difficult/expensive to build tools.
-.caption from [[https://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering]]
 
 * Static or Dynamically Typed?
 
 Peter Norvig, Director of Research at Google, explored weaknesses in Java and C++.
 
-The Go team viewed popular "outsider" languages like Lua, Javascript, Ruby as "reactionary" languages and saw they are mostly dynamically typed.
+The Go team initially looked at dynamically typed languages like Lua, Javascript, Ruby.
 
 Desired static-typing instead:
 
 - Proven in practice to create large-scale programs.
 - Powerful for experts.
-- Allows for many programmers.
-
-But, avoid the previous list of issues.
 
 * The Target
 
-- Comprehensible
+- Comprehensible, "light on the page"
 - Statically typed
-- Light on the page
-- Fast to work in / Fast builds
+- Fast builds
+- Fast to work in
 - Doesn't require tools, but supports them well
-
-* The Target (cont.)
-
-- Good at networking and multiprocessing*
-- `error` is built in
-- Package Dependency Management
-- Simple Package Export Rules
-- Third Party Code Discovery
-.caption from [[http://web.stanford.edu/class/ee380/Abstracts/100428.html][Another Go at Language Design]] and [[https://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering]]
+- Third party code discovery
+- Good at networking and multiprocessing
 
 * Brief Timeline on Multicore Processors
 
@@ -81,18 +69,19 @@ First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip
 
 * Were They Successful?
 
-High level skim:
-
 - Mark and sweep garbage collected
-- Composition (no inheritance)
+- Composition only, no inheritance
 - Interface implementation via duck-typing
 - Deployment is a single binary
 - Concurrency using built in language features
+- Cross-compiling with `$GOOS` and `$GOARCH` (9 OSs, 3 architectures)
+- `error` support
 
-Not in Go version 1:
+* Not in Go Version 1:
 
 - Generic programming (templates)
 - Dynamic libraries
+- An easy-to-use debugger
 
 * Learning Go: What creates the big picture?
 
@@ -132,37 +121,72 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 * An Expanded Example (w/ Closure)
 
-.play closureFact.go /START/,/END/
+.play closureFact.go /START/,/END/ HL000
 
 * C/C++ vs Go: Functional Programming
 
 Function:
 
-- C/C++: `int`(*)()`
-- Go: `func()`int`
+- `typedef`int`(*fn)(int,`int)`
+- `type`fn`func(int,`int)`int`
 
 Function using a function:
 
-- C/C++: `int`(*)(int`(*)(int,`int),`int)`
-- Go: `func(func(int,`int)`int,`int)`int`
+- `typedef`int`(*fn)(int`(*)(int,`int),`int)`
+- `type`fn`func(func(int,`int)`int,`int)`int`
 
 Function using and returning a function:
 
-- C/C++: `int`(*(*)(int`(*)(int,`int),`int))(int,`int)`
-- Go: `func(func(int,`int)`int,`int)`func(int,`int)`int`
+- `typedef`int`(*(*fn)(int`(*)(int,`int),`int))(int,`int)`
+- `type`fn`func(func(int,`int)`int,`int)`func(int,`int)`int`
+
+* What about bad input?
+
+.code naiveFact.go //,/END/
 
 * Error Handling
 
 .play closureFactErr.go
 
-* Error Handling
+* What is an error?
 
+Error is a built in interface in the language:
 
+.code errorDef.go
 
-- `error` is a built in interface type.
+Any type satisfying all of the function definitions satisfies the interface.
+
+* Creating an error with extra data:
+
+.play metadataError.go /START/,/END/
+
+* Error handling example:
+
+.code ioCopySample.go /STARTIO/,/ENDIO/
+
+* Handling the Exceptional without Exceptions
+
+Returning an error as soon as it happens is idiomatic.
+
+.code ioCopySample.go /STARTAPP/,/ENDAPP/
+
+* Handling the Exceptional without Exceptions (cont.)
+
+Handling cleanup would be a problem...
+
+.code ioCopySample.go /STARTAPPCLOSE/,/ENDAPPCLOSE/
+
+* Handling the Exceptional without Exceptions (cont.)
+
+\... but `defer` saves the day.
+
+.code ioCopySample.go /STARTAPPDEFER/,/ENDAPPDEFER/
+
+* Defer any function
+
+.play deferExample.go
 
 * References:
-
 
 - [[https://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering]] by Rob Pike at SPLASH 2012 in Tucson, Arizona, on October 25, 2012.
 - [[http://web.stanford.edu/class/ee380/Abstracts/100428.html][Another Go at Language Design]] by Rob Pike, on April 28, 2010.

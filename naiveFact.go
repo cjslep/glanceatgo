@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+
 //START OMIT
 func fact(n int) int {
 	val := 1

@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"errors"
+	"errors" // HL
 )
 
 func fact(n int) (int, error) { // HL
-	if n < 0 {
+	if n < 0 { // HL
 		return 0, errors.New("Factorial can only handle nonnegative integers") // HL
-	}
+	} // HL
 	val := 1
 	for i := n; i > 0; i-- {
 		val *= i
