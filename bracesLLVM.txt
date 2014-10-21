@@ -1,0 +1,22 @@
+// ...
+static void __swap_alloc(allocator_type& __x, allocator_type& __y)
+        _NOEXCEPT_(
+            !__alloc_traits::propagate_on_container_swap::value ||
+            __is_nothrow_swappable<allocator_type>::value)
+        {__swap_alloc(__x, __y, integral_constant<bool, // HL
+                      __alloc_traits::propagate_on_container_swap::value>());} // HL
+// ...
+void
+__vector_base<_Tp, _Allocator>::__destruct_at_end(pointer __new_last) _NOEXCEPT
+{ // HL
+    while (__new_last != __end_)
+        __alloc_traits::destroy(__alloc(), _VSTD::__to_raw_pointer(--__end_));
+} // HL
+// ...
+void clear() _NOEXCEPT
+    { // HL
+        size_type __old_size = size();
+        __base::clear();
+        __annotate_shrink(__old_size);
+        __invalidate_all_iterators();
+    } // HL

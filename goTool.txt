@@ -1,0 +1,34 @@
+//GET OMIT
+go get "example.tld/path/to/foo"
+//GETEND OMIT
+//BUILD OMIT
+go build "example.tld/path/to/foo"
+//BUILDEND OMIT
+//INSTALL OMIT
+go install "example.tld/path/to/foo"
+//INSTALLEND OMIT
+//COVERTEST OMIT
+go test -cover "example.tld/path/to/foo"
+PASS
+coverage: 45.5% of statements
+ok      example.tld/path/to/foo     0.071s
+//COVERTESTEND OMIT
+//TESTONLY OMIT
+go test "example.tld/path/to/foo"
+//TESTONLYEND OMIT
+//BENCHALL OMIT
+go test -bench=. "example.tld/path/to/foo"
+PASS
+BenchmarkFoo	10000000	       225 ns/op
+BenchmarkBar	10000000	       152 ns/op
+ok  	example.tld/path/to/foo	4.205s
+//BENCHALLEND OMIT
+//BENCHONLY OMIT
+go test -bench=. "example.tld/path/to/foo"
+//BENCHONLYEND OMIT
+//FMT OMIT
+go fmt "example.tld/path/to/foo"
+//FMTEND OMIT
+//VET OMIT
+go vet "example.tld/path/to/foo"
+//VETEND OMIT

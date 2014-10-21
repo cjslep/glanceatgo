@@ -7,11 +7,28 @@ Cory Slep
 Jr. Software Developer, Applied Research Associates
 cslep@ara.com
 
+* Purpose
+
+Consider programming language choice as one piece of a solution to a technical problem.
+
+* The Tour
+
+An online tour of the language is available at [[http://tour.golang.org/]]:
+
+.image tourHome.png _ 900
+
+* The Playground
+
+Play with the language without installing it at [[http://play.golang.org/]]:
+
+.image playHome.png _ 900
+
 * Overview
 
 - Motivation: Why does Go exist?
+- The Go Ecosystem
+- So What's The Catch?
 - Learning Go: What creates the big picture?
-- 
 
 * Motivation: Why does Go exist?
 
@@ -31,7 +48,7 @@ _"[...]_development_at_Google_is_big,_can_be_slow,_and_is_often_clumsy."_ -Rob P
 - Languages were designed in unrelated environments.
 - Programmers using different subsets and dialects.
 - Issues of scaling across developers, codebases, and hardware.
-- Build times on order of minutes to hours, consistently.
+- Build times on order of minutes to hours.
 - Uncontrolled or runaway dependencies.
 - Cost of updates too high.
 - Lack of tools, or too difficult/expensive to build tools.
@@ -49,13 +66,17 @@ Desired static-typing instead:
 
 * The Target
 
-- Comprehensible, "light on the page"
 - Statically typed
+- Comprehensible, "light on the page"
 - Fast builds
 - Fast to work in
 - Doesn't require tools, but supports them well
 - Third party code discovery
-- Good at networking and multiprocessing
+- Good at networking and _multiprocessing_
+
+* The Target (Paraphrased)
+
+Design a language targeted for software engineers and production systems, not for academic researchers and CS research.
 
 * Brief Timeline on Multicore Processors
 
@@ -67,35 +88,358 @@ C++, Java, and Python rely on libraries to do concurrent programming.
 
 First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip in 2001. By 2006, Intel (_Core_Duo_) and AMD (_Opteron_) joined with multicore CPUs.
 
-* Were They Successful?
+* Language Features
 
 - Mark and sweep garbage collected
 - Composition only, no inheritance
 - Interface implementation via duck-typing
 - Deployment is a single binary
 - Concurrency using built in language features
-- Cross-compiling with `$GOOS` and `$GOARCH` (9 OSs, 3 architectures)
-- `error` support
+- Cross-compiling with `$GOOS` and `$GOARCH`
+- `error` support is built in
 
-* Not in Go Version 1:
+* The Go Ecosystem
 
-- Generic programming (templates)
-- Dynamic libraries
-- An easy-to-use debugger
+_"Go:_'get_s[tuff]_done'_language"_ -Brad Fitzpatrick
+
+Unlike other projects (ex: `protobuf`), Google _imports_ the Go project into its organization _from_ the open source community.
+
+The community driven `go` command line tool is designed to be a simple and unobtrusive companion for any gopher.
+
+.image project.png 150 _
+
+* The Go Tool
+
+The `go` tool is provided to help the developer but is not required to use.
+
+Makes many things easy to do from the command line:
+
+- *Get*code*
+- Build code
+- Test code
+- Benchmark code
+- Format code
+- Simple static checking
+
+* The Go Tool: Conventions
+
+When using the `go` tool, the local workspace is set up in the following way:
+
+.code dirSystem.txt /DIR/,/DIREND/
+
+Packages are similar to namespaces in C++, but equate to a single library or executable.
+
+* Packages & Getting Code (cont.)
+
+Let's use an example: *godropbox*.
+
+It is available at: [[http://github.com/dropbox/godropbox][http://github.com/dropbox/godropbox]]
+
+Each directory is its own package. There is no special relationship between a parent and child directory besides keeping things organized.
+
+.image godropbox.png 350 _
+
+* Packages & Getting Code (cont.)
+
+.code dirSystem.txt /GETEX/,/GETEXEND/
+
+Fetches the code remotely and puts it on your local machine. Supported VCS:
+
+- Mercurial
+- Git
+- Subversion
+- Bazaar
+
+Any server can host the code, but the most commonly used websites are:
+
+- github.com
+- bitbucket.org
+- code.google.com/p
+
+* Packages & Getting Code (cont.)
+
+To use a package:
+
+.code dirSystem.txt /IMPORT/,/IMPORTEND/
+
+That is all it takes to get and use source code!
+
+* Discovering Code: godoc
+
+`godoc` is used to convert documentation to text, HTML, UNIX man page...
+
+The [[http://godoc.org/][godoc.org]] website automatically generates godoc information for libraries publicly available for GitHub, Bitbucket, Launchpad, and Google Project Housing.
+
+Standard library example: [[http://golang.org/pkg/net/http/][http://golang.org/pkg/net/http/]]
+
+*godropbox* example: [[https://godoc.org/github.com/dropbox/godropbox][https://godoc.org/github.com/dropbox/godropbox]]
+
+* Documenting Go Code
+
+To leverage godoc, put comments directly prior to whatever it is being documented:
+
+.code godocSample.go
+.image bitVector.png
+
+- Need to put a blank line between comments to start a new paragraph.
+- Preformatted text needs to be indented relative to surrounded comment text.
+- URLs will be converted to HTML.
+.caption from [[http://blog.golang.org/godoc-documenting-go-code][Documenting Go Code]]
+
+* Documenting Go Code
+
+- Documentation can use `/*`...`*/` style.
+- Runnable examples can be embedded into the documentation.
+- Known bugs can be documented.
+- Almost anything can be documented (packages, types, interfaces, functions, etc).
+
+[[https://godoc.org/github.com/fluhus/godoc-tricks][Godoc Tricks]] has many examples.
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+- *Build*code*
+- Test code
+- Benchmark code
+- Format code
+- Simple static checking
+
+* Compiling Code
+
+There are two commands:
+
+.code goTool.txt /BUILD/,/BUILDEND/
+
+- If a library, compile but delete output (ensure it compiles)
+- If an executable, compile executable to output directory
+
+.code goTool.txt /INSTALL/,/INSTALLEND/
+
+- If a library, compile library to `pkg/OS_ARCH/example.tld/path/to/foo.a`
+- If an executable, compile to `bin/`
+
+* Compiling Code (cont.)
+
+Two compilers in Go:
+
+- `gccgo`: Slower compilation, values CPU over concurrency (thread) optimizations, supports OSs that GCC supports.
+- `gc`: Faster compilation, values concurrency (coroutines) over CPU optimizations, based on Plan 9 C compiler.
+
+The linker used is based on the Plan 9 linker.
+
+* Compiling Code (cont.)
+
+When using the `go` tool:
+
+- It checks all `import` ed dependencies recursively
+- Quits and warns if any circular dependencies are detected
+- Rebuilds only packages that have changed or whose dependencies have been rebuilt
+
+So no more setting build dependencies, specifying linker directories, configuring VS project files...
+
+* Tangent: How fast is Go?
+
+[[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower]]'s web framework benchmarks provides a variety of tests.
+
+.image benchTE.png 500 _
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+.code goTool.txt /BUILD/,/BUILDEND/
+.code goTool.txt /INSTALL/,/INSTALLEND/
+- *Test*code*
+- Benchmark code
+- Format code
+- Simple static checking
+
+* Testing Code
+
+Testing is done by unit tests which are in files right beside the source code.
+
+When getting the source, the tests can be immediately viewed and run to judge quality.
+
+Test coverage can help determine the quality of the tests.
+
+.code goTool.txt /COVERTEST/,/COVERTESTEND/
+
+* Testing Code (cont.)
+
+Code for testing go in files that end in `_test`
+
+By convention, `foo.go` is tested by `foo_test.go`
+
+.image dboxTests.png
+.caption A sample of [[https://github.com/dropbox/godropbox/tree/master/caching][godropbox/caching]] files.
+
+* Testing Code (cont.)
+
+.code fooTest.go
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+.code goTool.txt /BUILD/,/BUILDEND/
+.code goTool.txt /INSTALL/,/INSTALLEND/
+.code goTool.txt /TESTONLY/,/TESTONLYEND/
+- *Benchmark*code*
+- Format code
+- Simple static checking
+
+* Benchmarking Code
+
+.code fooBench.go
+.code goTool.txt /BENCHALL/,/BENCHALLEND/
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+.code goTool.txt /BUILD/,/BUILDEND/
+.code goTool.txt /INSTALL/,/INSTALLEND/
+.code goTool.txt /TESTONLY/,/TESTONLYEND/
+.code goTool.txt /BENCHONLY/,/BENCHONLYEND/
+- *Format*code*
+- Simple static checking
+
+* Formatting Code
+
+Slightly cheating here, as the tool grew to encompass the `gofmt` tool as `go`fmt`.
+
+Automatically formats syntactically valid code into a certain style.
+
+.code gofmtEx.go /PREFORMAT/,/PREFORMATEND/
+.code gofmtEx.go /POSTFORMAT/,/POSTFORMATEND/
+
+* Formatting Code (cont.)
+
+The high adoption rate of this tool ensures that there is a high chance you are able to read Go code, because it looks like your code.
+
+_"Code_is_written_once_and_read_many_times."_ - Unknown Pragmatic Programmer
+
+Wikipedia lists a few brace styles:
+
+- Kernel Style
+- K&R Style (2 variants)
+- Allman Style
+- BSD KNF Style
+- ...and 7 others
+
+* Formatting Code (cont.)
+
+LLVM's libc++ standard library does not follow one standard. Vector:
+
+.code bracesLLVM.txt
+
+* Formatting Code (cont.)
+
+The Go standard library is run through the format tool. From `crypto/sha512`:
+
+.code bracesGolang.go
+
+* Formatting Code (cont.)
+
+_"Even_if_you_don't_intend_anybody_else_to_read_your_code,_there's_still_a_very_good_chance_that_somebody_will_have_to_stare_at_your_code_and_figure_out_what_it_does:_That_person_is_probably_going_to_be_you,_twelve_months_from_now."_ - From MSDN's Blog in 2007
+
+What did Microsoft release in 2007?
+
+* Formatting Code (cont.)
+
+.code goFmtBraces.go /PRE/,/PREEND/
+becomes
+
+.code goFmtBraces.go /POST/,/POSTEND/
+
+* Formatting Code (cont.)
+
+Formatting is a convention, and Go is open-source.
+
+Forking the [[http://golang.org/src/cmd/gofmt/gofmt.go][gofmt]] source is always an option.
+
+But there is a caveat...
+
+* Formatting Code (cont.)
+
+.play syntaxErr.go
+
+* Formatting Code (cont.)
+
+Semicolon injection forces brace style.
+
+BCPL-based injection. _Not_javascript_ .
+
+If at the end of a line it looks like a statement, put a semicolon there.
+
+_"Semicolons,_however,_are_for_parsers,_not_for_people,_and_we_wanted_to_eliminate_them_as_much_as_possible."_ - [[https://golang.org/doc/faq#semicolons][golang FAQ]]
+
+Therefore, this could be a statement:
+
+.code syntaxErr.go /MAYBESTATEMENT/,/MAYBESTATEMENTEND/
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+.code goTool.txt /BUILD/,/BUILDEND/
+.code goTool.txt /INSTALL/,/INSTALLEND/
+.code goTool.txt /TESTONLY/,/TESTONLYEND/
+.code goTool.txt /BENCHONLY/,/BENCHONLYEND/
+.code goTool.txt /FMT/,/FMTEND/
+- *Simple*static*checking*
+
+* Simple Static Checking
+
+Like `go`fmt`, `go`vet` was adopted from a popular third-party tool.
+
+- Unreachable code
+- Useless assignments
+- Atomic mistakes (concurrency kind of atomic)
+- ...many others
+
+* Simple Static Checking
+
+.code badVet.go
+.code vetOut.txt
+
+* The Go Tool Revisited
+
+.code goTool.txt /GET/,/GETEND/
+.code goTool.txt /BUILD/,/BUILDEND/
+.code goTool.txt /INSTALL/,/INSTALLEND/
+.code goTool.txt /TESTONLY/,/TESTONLYEND/
+.code goTool.txt /BENCHONLY/,/BENCHONLYEND/
+.code goTool.txt /FMT/,/FMTEND/
+.code goTool.txt /VET/,/VETEND/
+
+* So What's The Catch?
+
+* Not in Go Version 1.x
+
+An easy-to-use debugger is missing from the ecosystem.
+
+Mitigations:
+
+- `gdb` takes some significant wrangling.
+- Print statements everywhere.
+- Side effect: a great motivator for writing tests.
+
+* Not in Go Version 1.x
+
+Dynamically linked/loaded libraries are missing. Everything is statically linked.
+
+Mitigations:
+
+- Wait.
+
+* Not in Go Version 1.x
+
+Generic programming (templates). Incredibly controversial.
+
+Mitigations:
+
+- Wait for the `go`generate` command.
+- `interface{}` containers and typecasting.
+- Custom code generators.
 
 * Learning Go: What creates the big picture?
-
-* The Tour
-
-An online tour of the language is available at [[http://tour.golang.org/]]:
-
-.image tourHome.png _ 900
-
-* The Playground
-
-Play with the language without installing it at [[http://play.golang.org/]]:
-
-.image playHome.png _ 900
 
 * Hello World
 
@@ -114,7 +458,6 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 .play naiveFact.go /START/,/END/
 
-- A few semicolons, but BCPL-based _(not_javascript)_ semicolon injection forces brace style
 - Less parentheses.
 
 .play naiveFactBadBrace.go /START/,/END/
@@ -192,13 +535,27 @@ Handling cleanup would be a problem...
 
 .play deferExample.go
 
-* References:
+* References
 
 - [[https://talks.golang.org/2012/splash.article][Go at Google: Language Design in the Service of Software Engineering]] by Rob Pike at SPLASH 2012 in Tucson, Arizona, on October 25, 2012.
 - [[http://web.stanford.edu/class/ee380/Abstracts/100428.html][Another Go at Language Design]] by Rob Pike, on April 28, 2010.
 - [[https://code.google.com/p/go/source/browse/][Golang Source Code]].
 - [[http://norvig.com/design-patterns/][Design Patterns in Dynamic Languages]] by Peter Norvig, on May 5, 1996.
 - [[https://golang.org/doc/faq][Golang FAQ]].
+- [[https://www.youtube.com/watch?v=sYukPc0y_Ro&m=11&s=10][Go: 'Get s[tuff] done' language]] by Brian Fitzpatrick at dotScale 2013.
+- [[https://golang.org/doc/articles/go_command.html][About the go command]].
+
+* References (cont.)
+
+- [[https://tech.dropbox.com/2014/07/open-sourcing-our-go-libraries/][Open Sourcing Our Go Libraries]] by Dropbox.
+- [[http://godoc.org/][godoc.org]]
+- [[http://blog.golang.org/godoc-documenting-go-code][Documenting Go Code]]
+- [[https://godoc.org/github.com/fluhus/godoc-tricks][Godoc Tricks]]
+- [[https://blog.golang.org/gccgo-in-gcc-471][gccgo In gcc 4.7.1]]
+- [[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower Web Framework Benchmarks]]
+- [[http://en.wikipedia.org/wiki/Indent_style][Wikipedia Entry on Indentation Styles]]
+- [[http://golang.org/src/cmd/gofmt/gofmt.go][gofmt]] source code.
+- [[http://blogs.msdn.com/b/oldnewthing/archive/2007/04/06/2036150.aspx][Code is read much more often than it is written, so plan accordingly]] by MSDN in 2007.
 - [[http://www.reneefrench.com][_Gopher_ Images]] by Renée French.
 - [[http://research.swtch.com/generic][The Generic Dilemma]] by Russ Cox, December 3, 2009.
 - [[https://groups.google.com/d/topic/golang-nuts/o0VTTqC8hOU/discussion][External Linking CLs]] discussion in golang-nuts.

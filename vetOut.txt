@@ -1,0 +1,3 @@
+badVet.go:8: struct field tag "foo" not compatible with reflect.StructTag.Get
+badVet.go:12: missing argument for Printf("%s"): format reads arg 2, have only 1 args
+exit status 1

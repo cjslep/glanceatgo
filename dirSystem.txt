@@ -1,0 +1,25 @@
+//GETEX OMIT
+go get "github.com/dropbox/godropbox"
+//GETEXEND OMIT
+//DIR OMIT
+bin/
+    foo                        # executables
+pkg/
+    darwin_amd64/
+        github.com/fizz/
+            bar.a              # package object
+    linux_amd64/
+        github.com/fizz/
+            bar.a              # package object
+src/
+    github.com/fizz/
+        foo/
+            .git/              # git repository metadata
+            main.go            # source
+            bar/               # different library
+                .git/
+                example.go
+//DIREND OMIT
+//IMPORT OMIT
+import "github.com/dropbox/godropbox/caching"
+//IMPORTEND OMIT
