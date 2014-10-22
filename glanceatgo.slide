@@ -754,6 +754,9 @@ Using the `error` idiom is much more common than `panic` and `recover`.
 - [[https://blog.golang.org/gccgo-in-gcc-471][gccgo In gcc 4.7.1]]
 - [[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower Web Framework Benchmarks]]
 - [[http://en.wikipedia.org/wiki/Indent_style][Wikipedia Entry on Indentation Styles]]
+
+* References (cont.)
+
 - [[http://golang.org/src/cmd/gofmt/gofmt.go][gofmt]] source code.
 - [[http://blogs.msdn.com/b/oldnewthing/archive/2007/04/06/2036150.aspx][Code is read much more often than it is written, so plan accordingly]] by MSDN in 2007.
 - [[https://blog.golang.org/share-memory-by-communicating][Share Memory By Communicating]].
@@ -761,6 +764,9 @@ Using the `error` idiom is much more common than `panic` and `recover`.
 - [[https://www.youtube.com/watch?v=f6kdp27TYZs][Go Concurrency Patterns]] by Rob Pike on June 2012. ([[http://talks.golang.org/2012/concurrency.slide#1][slides]])
 - [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]] by Sameer Ajmani on May 2013. ([[http://talks.golang.org/2013/advconc.slide#1][slides]])
 - [[http://blog.golang.org/defer-panic-and-recover][Defer, Panicking and Recovering]]
+
+* References (cont.)
+
 - [[http://www.reneefrench.com][_Gopher_ Images]] by Renée French.
 - [[http://research.swtch.com/generic][The Generic Dilemma]] by Russ Cox, December 3, 2009.
 - [[https://groups.google.com/d/topic/golang-nuts/o0VTTqC8hOU/discussion][External Linking CLs]] discussion in golang-nuts.
