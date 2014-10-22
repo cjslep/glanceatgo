@@ -1,0 +1,17 @@
+//CPPFUNC OMIT
+typedef int (*fn)(int, int)
+//CPPFUNCEND OMIT
+//GOFUNC OMIT
+type fn func(int, int) int
+//GOFUNCEND OMIT
+//GOFUNCGEN OMIT
+func (typeAttachedTo) FunctionNameA(arg1 type1) returnType1
+func (*typeAttachedTo) FunctionNameB(arg1, arg2 type1) (nameReturn1 returnType1)
+func FunctionNameC(arg1 ...type1) (returnType1, returnType2)
+//GOFUNCGENEND OMIT
+//CPPFUNCFUNC OMIT
+typedef int (*(*fn)(int (*)(int, int), int))(int, int)
+//CPPFUNCFUNCEND OMIT
+//GOFUNCFUNC OMIT
+type fn func(func(int, int) int, int) func(int, int) int
+//GOFUNCFUNCEND OMIT

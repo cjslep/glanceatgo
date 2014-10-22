@@ -27,7 +27,7 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 - Motivation: Why does Go exist?
 - The Go Ecosystem
-- So What's The Catch?
+- So What's Missing?
 - Learning Go: What creates the big picture?
 
 * Motivation: Why does Go exist?
@@ -100,9 +100,33 @@ First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip
 
 * The Go Ecosystem
 
+* The Go Ecosystem
+
 _"Go:_'get_s[tuff]_done'_language"_ -Brad Fitzpatrick
 
 Unlike other projects (ex: `protobuf`), Google _imports_ the Go project into its organization _from_ the open source community.
+
+* Who is using Go?
+
+- Youtube's Download Servers ([[https://github.com/youtube/vitess][OSS MySQL Scaling Architecture]])
+- BBC Worldwide
+- Bitbucket
+- Digital Ocean
+- Dropbox ([[https://github.com/dropbox/godropbox][OSS Libraries]])
+- GitHub
+- Mozilla Services ([[https://github.com/mozilla-services/heka][OSS Data Acquisition & Processing]])
+- Tumblr ([[https://github.com/tumblr/gocircuit][OSS 'Circuit' Package]])
+
+Many more listed [[https://code.google.com/p/go-wiki/wiki/GoUsers][here]]
+
+* Who is using Go? (cont.)
+
+- Big teams
+- Small teams
+- Open-source products
+- Proprietary products
+- Startups
+- Large Companies
 
 The community driven `go` command line tool is designed to be a simple and unobtrusive companion for any gopher.
 
@@ -399,7 +423,7 @@ Like `go`fmt`, `go`vet` was adopted from a popular third-party tool.
 .code badVet.go
 .code vetOut.txt
 
-* The Go Tool Revisited
+* The Go Tool Summarized
 
 .code goTool.txt /GET/,/GETEND/
 .code goTool.txt /BUILD/,/BUILDEND/
@@ -409,7 +433,7 @@ Like `go`fmt`, `go`vet` was adopted from a popular third-party tool.
 .code goTool.txt /FMT/,/FMTEND/
 .code goTool.txt /VET/,/VETEND/
 
-* So What's The Catch?
+* So What's Missing?
 
 * Not in Go Version 1.x
 
@@ -428,6 +452,7 @@ Dynamically linked/loaded libraries are missing. Everything is statically linked
 Mitigations:
 
 - Wait.
+- Choose another language.
 
 * Not in Go Version 1.x
 
@@ -445,57 +470,201 @@ Mitigations:
 
 .play helloWorld.go
 
-* Hello World
+* Concurrency
 
-.code helloWorld.go
+Go uses the keyword `go` to create _goroutines_.
 
-- `package`main` is a special package name for packages containing a main function.
-- `import`"fmt"` is similar to the `#include` C++ preprocessor macro.
-- The keyword `func` is used to declare a function.
-- _"Semicolons,_however,_are_for_parsers,_not_for_people,_and_we_wanted_to_eliminate_them_as_much_as_possible."_ Golang FAQ
+The `gc` compiler implements _goroutines_ as coroutines.
 
-* An Expanded Example
+The `gccgo` compiler implements _goroutines_ as threads.
 
-.play naiveFact.go /START/,/END/
+Each goroutine starts at 8kB stack space that is grown as needed.
 
-- Less parentheses.
+* Making Hello World Concurrent
 
-.play naiveFactBadBrace.go /START/,/END/
+.play concurrentHelloWorld.go
 
-* An Expanded Example (w/ Closure)
+* Making Hello World Concurrent
 
-.play closureFact.go /START/,/END/ HL000
+.code concurrentHelloWorld.go
+
+Nothing printed!
+
+* Making Hello World Concurrent
+
+.code concurrentHelloWorld.go
+
+The main function exited before the goroutine could write the string to `stdout`.
+
+* Concurrent Flow Of Control
+
+Traditionally, mutexes are used to prevent race conditions.
+
+Mutexes embody the concept of _"communicate_by_sharing_memory"_ .
+
+Mutexes are still available in Go, but _channels_ are favored instead.
+
+Channels embody the concept of _"share_memory_by_communicating"_ .
+
+This is one of the core philosophies to effectively writing concurrent code in Go, so much so that [[https://blog.golang.org/share-memory-by-communicating][their blog]] states: _Do_not_communicate_by_sharing_memory;_instead,_share_memory_by_communicating._
+
+* Tangent: Concurrency vs Parallelism
+
+Rob Pike [[http://blog.golang.org/concurrency-is-not-parallelism][has a great talk]] on this topic that fully outlines the differences.
+
+The short version:
+
+- _"Concurrency_is_about_structure_[of_a_solution]"_ (ex: graphics & DB query & ...)
+- _"Parallelism_is_about_execution_[of_a_solution]"_ (ex: dot product, bitcoin mining)
+
+You can solve problems concurrently that are intractable to parallelize.
+
+* Making Hello World Concurrent
+
+Sharing information across channels:
+
+.play concurrentChanSendHW.go HL001
+
+* Making Hello World Concurrent
+
+Signaling a synchronization point:
+
+.play concurrentCorrectHelloWorld.go HL001
+
+* Making Hello World Concurrent
+
+Notice the anonymous closures used:
+
+.code concurrentChanSendHW.go /ANONFUNC/,/ANONFUNCEND/ HL001
+.code concurrentCorrectHelloWorld.go /ANONFUNC/,/ANONFUNCEND/ HL001
+
+Also note that the anonymous function is called immediately.
+
+* Function Declarations
+
+To elaborate further, let's create simple helper functions:
+
+.code helloAndWorld.go /HELLO/,/HELLOEND/
+.code helloAndWorld.go /WORLD/,/WORLDEND/
+
+* Making Hello World Concurrent
+
+.play helloAndWorld.go /MAIN/,/MAINEND/
+
+* Making Hello World Concurrent
+
+Deadlock: All goroutines are asleep!
+
+.code helloAndWorld.go /BLOCK/,/BLOCKEND/ HL001
+
+The channel is defined to be _unbuffered_, so the main goroutine blocks.
+
+Buffering is possible, but `World` functions may put their results in the buffer before `Hello`.
+
+It is a viable option, but can change the overall system behavior.
+
+* Making Hello World Concurrent
+
+Solution: another goroutine.
+
+.play correctHelloAndWorld.go /MAIN/,/MAINEND/ HL001
+
+* Making Hello World Concurrent
+
+The `Hello` function uses `3` all the time!
+
+.code correctHelloAndWorld.go /BLOCK/,/BLOCKEND/
+
+This uses `i` at the moment the _func_closure_ executes
+
+Desire to use `i` at the moment _go_ executes
+
+* Making Hello World Concurrent
+
+.play realCorrectHelloAndWorld.go /MAIN/,/MAINEND/
+
+Finally!
+
+* Hello World Synchronizing Goroutines Execution
+
+Note that the goroutines immediately start executing as they are created.
+
+Let's make each goroutine block until the `main` goroutine is done creating all the goroutines.
+
+Modified `World` function:
+
+.code syncStart.go /WORLD/,/WORLDEND/
+
+* Hello World Synchronizing Goroutines Execution
+
+.play syncStart.go /MAIN/,/MAINEND/
+
+* Quick Reflection
+
+So far we have:
+
+- Created multiple goroutines
+- Synchronized their execution starting
+- Used pre-existing functions to spawn goroutines
+- Used anonymous functional closures to spawn goroutines
+- Aggregated results from a single channel
+
+But what about multiple channels?
+
+* Hello and World: Multiple Channels
+
+First, let's create multiple channels:
+
+.play helloAndWorldSelect.go /CHAN/,/CHANEND/
+
+* Hello and World: Multiple Channels
+
+The combination of `for` and `select` is very common:
+
+.play helloAndWorldSelect.go /MAIN/,/MAINEND/
+
+Note that `select` and `switch` do _not_ fall-through `case` statements by default.
+
+* More Concurrency Designs
+
+There are a lot of powerful designs that `channels`, `go`, and `for` + `select` can unlock.
+
+For further depth on unlocking the power of concurrency:
+
+- [[https://www.youtube.com/watch?v=f6kdp27TYZs][Go Concurrency Patterns]] by Rob Pike.
+- [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]] by Sameer Ajmani
+
+* Functional Mastery
+
+With these anonymous functions and closures, being comfortable using functions as a first-class type is important:
+
+- Declaring functions as types
+- Functions using functions as arguments
+- Functions returning functions
+
+Keeping things readable is why Go starts function definitions with `func`.
 
 * C/C++ vs Go: Functional Programming
 
-Function type declaration:
+In Go, sample function declarations are similar to:
 
-- `typedef`int`(*fn)(int,`int)`
-- `type`fn`func(int,`int)`int`
+.code funcTypeDecls.txt /GOFUNCGEN/,/GOFUNCGENEND/
+
+Function overloading is not supported for simplified method dispatch.
+
+Therefore, a function type declaration in C++ and GO:
+
+.code funcTypeDecls.txt /CPPFUNC/,/CPPFUNCEND/
+.code funcTypeDecls.txt /GOFUNC/,/GOFUNCEND/
 
 * C/C++ vs Go: Functional Programming (cont.)
 
-Function using a function type declaration:
+Function using and returning a function:
 
-- `typedef`int`(*fn)(int`(*)(int,`int),`int)`
-- `type`fn`func(func(int,`int)`int,`int)`int`
-
-* C/C++ vs Go: Functional Programming (cont.)
-
-Function using and returning a function type declaration:
-
-- `typedef`int`(*(*fn)(int`(*)(int,`int),`int))(int,`int)`
-- `type`fn`func(func(int,`int)`int,`int)`func(int,`int)`int`
-
-* What about bad input?
-
-.code naiveFact.go //,/END/
+.code funcTypeDecls.txt /CPPFUNCFUNC/,/CPPFUNCFUNCEND/
+.code funcTypeDecls.txt /GOFUNCFUNC/,/GOFUNCFUNCEND/
 
 * Error Handling
-
-.play closureFactErr.go
-
-* What is an error?
 
 Error is a built in interface in the language:
 
@@ -531,9 +700,40 @@ Handling cleanup would be a problem...
 
 .code ioCopySample.go /STARTAPPDEFER/,/ENDAPPDEFER/
 
+* Handling the Exceptional without Exceptions (cont.)
+
+Application code winds up having *a*lot* of error checking statements.
+
+Many people find it tedious, but it enables unique error handing for each error that could arise in each step of the process.
+
+.code errAppEx.go
+.caption from a [[https://github.com/jvlmdr/lin-go/blob/2237d781ebde411690416d8af6bddd9e88fb8f50/clap/eig.go][vector/math]] library
+
 * Defer any function
 
-.play deferExample.go
+.play deferExample.go /MAIN/,/MAINEND/
+
+* Other Defer Uses
+
+[[http://blog.golang.org/defer-panic-and-recover][Panicking and Recovering]] also relies on `defer`.
+
+This allows for behavior similar to exceptions.
+
+Using the `error` idiom is much more common than `panic` and `recover`.
+
+* Recap
+
+- `go` tool helps get, test, benchmark, statically check, and build code easily.
+- Community code is readable thanks to `go`fmt`.
+- Concurrency is built in, no libraries needed.
+- Error handling is highly visible without interrupting flow of control.
+- Interfaces can be implemented by types unaware of the interface.
+
+* What to do next
+
+- Take the [[http://tour.golang.org/#1][tour]].
+- [[http://play.golang.org/][Play]] with the language and decide whether [[https://golang.org/doc/install][to install it]].
+- Follow the [[https://golang.org/doc/code.html][How To Write Go Code]] article to see specific details on setting up your environment.
 
 * References
 
@@ -556,6 +756,11 @@ Handling cleanup would be a problem...
 - [[http://en.wikipedia.org/wiki/Indent_style][Wikipedia Entry on Indentation Styles]]
 - [[http://golang.org/src/cmd/gofmt/gofmt.go][gofmt]] source code.
 - [[http://blogs.msdn.com/b/oldnewthing/archive/2007/04/06/2036150.aspx][Code is read much more often than it is written, so plan accordingly]] by MSDN in 2007.
+- [[https://blog.golang.org/share-memory-by-communicating][Share Memory By Communicating]].
+- [[http://blog.golang.org/concurrency-is-not-parallelism][Concurrency Is Not Parallelism]] by Rob Pike on Jan 11, 2012.
+- [[https://www.youtube.com/watch?v=f6kdp27TYZs][Go Concurrency Patterns]] by Rob Pike on June 2012. ([[http://talks.golang.org/2012/concurrency.slide#1][slides]])
+- [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]] by Sameer Ajmani on May 2013. ([[http://talks.golang.org/2013/advconc.slide#1][slides]])
+- [[http://blog.golang.org/defer-panic-and-recover][Defer, Panicking and Recovering]]
 - [[http://www.reneefrench.com][_Gopher_ Images]] by Renée French.
 - [[http://research.swtch.com/generic][The Generic Dilemma]] by Russ Cox, December 3, 2009.
 - [[https://groups.google.com/d/topic/golang-nuts/o0VTTqC8hOU/discussion][External Linking CLs]] discussion in golang-nuts.

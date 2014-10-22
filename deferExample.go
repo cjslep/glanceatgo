@@ -1,12 +1,14 @@
 package main
 
 import "fmt"
-
+//MAIN OMIT
 func couldReturnEarly(b bool) {
 	fmt.Println("Before defer.")
-	defer func() {
-		fmt.Printf("I received: %v\n", b)
-	}()
+
+	defer func() { // HL
+		fmt.Printf("I received: %v\n", b) // HL
+	}() // HL
+
 	fmt.Println("After defer.")
 	if b {
 		fmt.Println("Early return.")
@@ -21,3 +23,4 @@ func main() {
 	fmt.Println()
 	couldReturnEarly(false)
 }
+//MAINEND OMIT
