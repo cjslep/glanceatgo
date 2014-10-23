@@ -53,17 +53,6 @@ _"[...]_development_at_Google_is_big,_can_be_slow,_and_is_often_clumsy."_ -Rob P
 - Cost of updates too high.
 - Lack of tools, or too difficult/expensive to build tools.
 
-* Static or Dynamically Typed?
-
-Peter Norvig, Director of Research at Google, explored weaknesses in Java and C++.
-
-The Go team initially looked at dynamically typed languages like Lua, Javascript, Ruby.
-
-Desired static-typing instead:
-
-- Proven in practice to create large-scale programs.
-- Powerful for experts.
-
 * The Target
 
 - Statically typed
@@ -74,9 +63,7 @@ Desired static-typing instead:
 - Third party code discovery
 - Good at networking and _multiprocessing_
 
-* The Target (Paraphrased)
-
-Design a language targeted for software engineers and production systems, not for academic researchers and CS research.
+In short: Design a language targeted for software engineers and production systems, not for academic researchers and CS research.
 
 * Brief Timeline on Multicore Processors
 
@@ -102,13 +89,13 @@ First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip
 
 * The Go Ecosystem
 
-_"Go:_'get_s[tuff]_done'_language"_ -Brad Fitzpatrick
+_"Go:_'get_shit_done'_language"_ -Brad Fitzpatrick
 
 Unlike other projects (ex: `protobuf`), Google _imports_ the Go project into its organization _from_ the open source community.
 
 * Who is using Go?
 
-- Youtube's Download Servers ([[https://github.com/youtube/vitess][OSS MySQL Scaling Architecture]])
+- youtube.com and dl.google.com ([[https://github.com/youtube/vitess][OSS MySQL Scaling Architecture]])
 - BBC Worldwide
 - Bitbucket
 - Digital Ocean
@@ -153,7 +140,7 @@ When using the `go` tool, the local workspace is set up in the following way:
 
 Packages are similar to namespaces in C++, but equate to a single library or executable.
 
-* Packages & Getting Code (cont.)
+* Packages & Getting Code
 
 Let's use an example: *godropbox*.
 
@@ -210,13 +197,6 @@ To leverage godoc, put comments directly prior to whatever it is being documente
 - URLs will be converted to HTML.
 .caption from [[http://blog.golang.org/godoc-documenting-go-code][Documenting Go Code]]
 
-* Documenting Go Code
-
-- Documentation can use `/*`...`*/` style.
-- Runnable examples can be embedded into the documentation.
-- Known bugs can be documented.
-- Almost anything can be documented (packages, types, interfaces, functions, etc).
-
 [[https://godoc.org/github.com/fluhus/godoc-tricks][Godoc Tricks]] has many examples.
 
 * The Go Tool Revisited
@@ -261,7 +241,7 @@ When using the `go` tool:
 
 So no more setting build dependencies, specifying linker directories, configuring VS project files...
 
-* Tangent: How fast is Go?
+* How fast is Go?
 
 [[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower]]'s web framework benchmarks provides a variety of tests.
 
@@ -327,7 +307,7 @@ By convention, `foo.go` is tested by `foo_test.go`
 
 * Formatting Code
 
-Slightly cheating here, as the tool grew to encompass the `gofmt` tool as `go`fmt`.
+The tool grew to encompass the `gofmt` tool as `go`fmt`.
 
 Automatically formats syntactically valid code into a certain style.
 
@@ -336,7 +316,7 @@ Automatically formats syntactically valid code into a certain style.
 
 * Formatting Code (cont.)
 
-The high adoption rate of this tool ensures that there is a high chance you are able to read Go code, because it looks like your code.
+The high adoption rate of this tool ensures that there is a high chance you are able to read third party Go code, because it looks like your code.
 
 _"Code_is_written_once_and_read_many_times."_ - Unknown Pragmatic Programmer
 
@@ -359,12 +339,6 @@ LLVM's libc++ standard library does not follow one standard. Vector:
 The Go standard library is run through the format tool. From `crypto/sha512`:
 
 .code bracesGolang.go
-
-* Formatting Code (cont.)
-
-_"Even_if_you_don't_intend_anybody_else_to_read_your_code,_there's_still_a_very_good_chance_that_somebody_will_have_to_stare_at_your_code_and_figure_out_what_it_does:_That_person_is_probably_going_to_be_you,_twelve_months_from_now."_ - From MSDN's Blog in 2007
-
-What did Microsoft release in 2007?
 
 * Formatting Code (cont.)
 
@@ -417,11 +391,6 @@ Like `go`fmt`, `go`vet` was adopted from a popular third-party tool.
 - Useless assignments
 - Atomic mistakes (concurrency kind of atomic)
 - ...many others
-
-* Simple Static Checking
-
-.code badVet.go
-.code vetOut.txt
 
 * The Go Tool Summarized
 
@@ -549,25 +518,7 @@ To elaborate further, let's create simple helper functions:
 
 * Making Hello World Concurrent
 
-.play helloAndWorld.go /MAIN/,/MAINEND/
-
-* Making Hello World Concurrent
-
-Deadlock: All goroutines are asleep!
-
-.code helloAndWorld.go /BLOCK/,/BLOCKEND/ HL001
-
-The channel is defined to be _unbuffered_, so the main goroutine blocks.
-
-Buffering is possible, but `World` functions may put their results in the buffer before `Hello`.
-
-It is a viable option, but can change the overall system behavior.
-
-* Making Hello World Concurrent
-
-Solution: another goroutine.
-
-.play correctHelloAndWorld.go /MAIN/,/MAINEND/ HL001
+.play correctHelloAndWorld.go /MAIN/,/MAINEND/
 
 * Making Hello World Concurrent
 
@@ -621,7 +572,7 @@ First, let's create multiple channels:
 
 The combination of `for` and `select` is very common:
 
-.play helloAndWorldSelect.go /MAIN/,/MAINEND/
+.code helloAndWorldSelect.go /MAIN/,/MAINEND/
 
 Note that `select` and `switch` do _not_ fall-through `case` statements by default.
 
@@ -734,6 +685,8 @@ Using the `error` idiom is much more common than `panic` and `recover`.
 - Take the [[http://tour.golang.org/#1][tour]].
 - [[http://play.golang.org/][Play]] with the language and decide whether [[https://golang.org/doc/install][to install it]].
 - Follow the [[https://golang.org/doc/code.html][How To Write Go Code]] article to see specific details on setting up your environment.
+
+* Questions?
 
 * References
 

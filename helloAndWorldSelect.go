@@ -25,12 +25,12 @@ func main() {
 	//MAIN OMIT
 	close(startChan)
 	for i := 0; i < 100 ; i++ {
-		select {
+		select { // HL
 		case w := <- worldChan: // HL
 			fmt.Println("Hello " + w)
 		case h := <- helloChan: // HL
 			fmt.Println("You say goodbye, and I say " + h)
-		}
+		} // HL
 	}
 	//MAINEND OMIT
 }
