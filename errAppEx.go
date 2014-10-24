@@ -1,5 +1,4 @@
 // Computes the eigenvalue factorization of a Hermitian matrix.
-// Calls ZHEEV.
 func EigHerm(a Const) (*Mat, []float64, error) {
 	if err := errNonPosDims(a); err != nil {
 		return nil, nil, err

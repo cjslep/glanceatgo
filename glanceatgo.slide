@@ -27,8 +27,8 @@ Play with the language without installing it at [[http://play.golang.org/]]:
 
 - Motivation: Why does Go exist?
 - The Go Ecosystem
-- So What's Missing?
-- Learning Go: What creates the big picture?
+- What's Missing?
+- Some Go Code
 
 * Motivation: Why does Go exist?
 
@@ -84,6 +84,12 @@ First mass-produced commercial multicore commercial chip was IBM's _POWER4_ chip
 - Concurrency using built in language features
 - Cross-compiling with `$GOOS` and `$GOARCH`
 - `error` support is built in
+
+* How fast is Go?
+
+[[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower]]'s web framework benchmarks provides a variety of tests.
+
+.image benchTE.png 500 _
 
 * The Go Ecosystem
 
@@ -241,12 +247,6 @@ When using the `go` tool:
 
 So no more setting build dependencies, specifying linker directories, configuring VS project files...
 
-* How fast is Go?
-
-[[http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json][Techempower]]'s web framework benchmarks provides a variety of tests.
-
-.image benchTE.png 500 _
-
 * The Go Tool Revisited
 
 .code goTool.txt /GET/,/GETEND/
@@ -402,7 +402,7 @@ Like `go`fmt`, `go`vet` was adopted from a popular third-party tool.
 .code goTool.txt /FMT/,/FMTEND/
 .code goTool.txt /VET/,/VETEND/
 
-* So What's Missing?
+* What's Missing?
 
 * Not in Go Version 1.x
 
@@ -433,7 +433,7 @@ Mitigations:
 - `interface{}` containers and typecasting.
 - Custom code generators.
 
-* Learning Go: What creates the big picture?
+* Some Go Code
 
 * Hello World
 
@@ -441,29 +441,13 @@ Mitigations:
 
 * Concurrency
 
-Go uses the keyword `go` to create _goroutines_.
+Go uses the keyword *go* to create _goroutines_.
 
 The `gc` compiler implements _goroutines_ as coroutines.
 
 The `gccgo` compiler implements _goroutines_ as threads.
 
 Each goroutine starts at 8kB stack space that is grown as needed.
-
-* Making Hello World Concurrent
-
-.play concurrentHelloWorld.go
-
-* Making Hello World Concurrent
-
-.code concurrentHelloWorld.go
-
-Nothing printed!
-
-* Making Hello World Concurrent
-
-.code concurrentHelloWorld.go
-
-The main function exited before the goroutine could write the string to `stdout`.
 
 * Concurrent Flow Of Control
 
@@ -477,7 +461,7 @@ Channels embody the concept of _"share_memory_by_communicating"_ .
 
 This is one of the core philosophies to effectively writing concurrent code in Go, so much so that [[https://blog.golang.org/share-memory-by-communicating][their blog]] states: _Do_not_communicate_by_sharing_memory;_instead,_share_memory_by_communicating._
 
-* Tangent: Concurrency vs Parallelism
+* Concurrency vs Parallelism
 
 Rob Pike [[http://blog.golang.org/concurrency-is-not-parallelism][has a great talk]] on this topic that fully outlines the differences.
 
@@ -500,41 +484,16 @@ Signaling a synchronization point:
 
 .play concurrentCorrectHelloWorld.go HL001
 
-* Making Hello World Concurrent
-
-Notice the anonymous closures used:
-
-.code concurrentChanSendHW.go /ANONFUNC/,/ANONFUNCEND/ HL001
-.code concurrentCorrectHelloWorld.go /ANONFUNC/,/ANONFUNCEND/ HL001
-
-Also note that the anonymous function is called immediately.
-
 * Function Declarations
 
 To elaborate further, let's create simple helper functions:
 
-.code helloAndWorld.go /HELLO/,/HELLOEND/
-.code helloAndWorld.go /WORLD/,/WORLDEND/
-
-* Making Hello World Concurrent
-
-.play correctHelloAndWorld.go /MAIN/,/MAINEND/
-
-* Making Hello World Concurrent
-
-The `Hello` function uses `3` all the time!
-
-.code correctHelloAndWorld.go /BLOCK/,/BLOCKEND/
-
-This uses `i` at the moment the _func_closure_ executes
-
-Desire to use `i` at the moment _go_ executes
+.code realCorrectHelloAndWorld.go /HELLO/,/HELLOEND/
+.code realCorrectHelloAndWorld.go /WORLD/,/WORLDEND/
 
 * Making Hello World Concurrent
 
 .play realCorrectHelloAndWorld.go /MAIN/,/MAINEND/
-
-Finally!
 
 * Hello World Synchronizing Goroutines Execution
 
@@ -550,29 +509,17 @@ Modified `World` function:
 
 .play syncStart.go /MAIN/,/MAINEND/
 
-* Quick Reflection
-
-So far we have:
-
-- Created multiple goroutines
-- Synchronized their execution starting
-- Used pre-existing functions to spawn goroutines
-- Used anonymous functional closures to spawn goroutines
-- Aggregated results from a single channel
-
-But what about multiple channels?
-
 * Hello and World: Multiple Channels
 
-First, let's create multiple channels:
+Let's create multiple channels:
 
-.play helloAndWorldSelect.go /CHAN/,/CHANEND/
+.code helloAndWorldSelect.go /CHAN/,/CHANEND/
 
 * Hello and World: Multiple Channels
 
 The combination of `for` and `select` is very common:
 
-.code helloAndWorldSelect.go /MAIN/,/MAINEND/
+.play helloAndWorldSelect.go /MAIN/,/MAINEND/
 
 Note that `select` and `switch` do _not_ fall-through `case` statements by default.
 
@@ -583,7 +530,7 @@ There are a lot of powerful designs that `channels`, `go`, and `for` + `select` 
 For further depth on unlocking the power of concurrency:
 
 - [[https://www.youtube.com/watch?v=f6kdp27TYZs][Go Concurrency Patterns]] by Rob Pike.
-- [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]] by Sameer Ajmani
+- [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]] by Sameer Ajmani.
 
 * Functional Mastery
 
@@ -623,7 +570,7 @@ Error is a built in interface in the language:
 
 Any type satisfying all of the function definitions satisfies the interface.
 
-* Creating an error with extra data:
+* Creating an error with extra data
 
 .play metadataError.go /START/,/END/
 

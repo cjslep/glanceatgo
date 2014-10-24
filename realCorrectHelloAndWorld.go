@@ -10,9 +10,9 @@ func main() {
 	}
 
 	for i := 0; i < 3; i++ {
-		go func(index int) { // HL
+		go func(index int) {
 			strChan <- Hello(index)
-		}(i) // HL
+		}(i)
 	}
 
 	for i := 0; i < 6; i++ {
@@ -20,10 +20,13 @@ func main() {
 	}
 }
 //MAINEND OMIT
+//HELLO OMIT
 func Hello(index int) string {
 	return fmt.Sprintf("Hello from %v", index)
 }
-
+//HELLOEND OMIT
+//WORLD OMIT
 func World(index int, out chan <- string) {
 	out <- fmt.Sprintf("World from %v", index)
 }
+//WORLDEND OMIT
